@@ -1,0 +1,103 @@
+import pandas as pd
+
+Himport numpy as np
+
+from sentence transformers import SentenceTransformer
+
+import faiss
+
+£ = pd.read_excel (
+
+chunks = df.apply(lambda row: row.to_string(),
+
+{i}" for i in range(len(chunks) ) ]
+
+model = SentenceTransformer (
+
+embeddings = model.encode (chunks)
+
+embeddings np = np.array(embeddings) .astype (
+
+embeddings np.shape[1]
+
+Hndex = faiss.IndexFlatL2(d)
+
+axis=1).tolist()
+
+Hndex.add(embeddings np)
+
+ifaiss.write index(index,
+
+metadata = { : chunks,
+import pickle
+ith open (
+
+pickle.dump (metadata, f)
+
+ser question =
+
+question embedding model.encode( [user question]).astype(
+
+distances, indices index.search(question_ embedding, k)
+
+ith open ( 1
+
+metadata = pickle.load(f)
+
+retrieved content = [metadata[ J [i] for i in indices[0]]
+
+retrieved text = -join([str(content) for content in
+
+retrieved content] )
+
+chunk size = 1024
+
+chunks = [retrieved text[i:it+tchunk size] for i in range(0,
+
+len(retrieved text), chunk size) ]
+
+{user question} {retrieved text}
+
+{system_role} {input_text }
+
+pathlib
+
+textwrap
+
+google.generativeai as genai
+
+from google.colab import userdata
+
+from IPython.display import display
+
+from IPython.display import Markdown
+
+def to _markdown (text):
+
+text = text. replace ( 7 )
+
+return Markdown (textwrap.indent (text, > ', predicate=lambda _
+
+rue) )
+
+OOGLE API KEY=userdata.get (
+
+genai.configure(api_key=GOOGLE API_KEY)
+
+modelX = genai.GenerativeModel ( )
+
+response = modelX.generate content (prompt, stream=True)
+
+iffor chunk in response:
+
+print (chunk.text)
+
+complete response =
+
+iffor chunk in response:
+
+complete response += chunk.text
+
+print (complete response)
+
+53
