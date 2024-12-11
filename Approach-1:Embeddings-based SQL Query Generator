@@ -1,0 +1,302 @@
+numpy
+
+RandomFore
+
+transformers
+
+lForTokencl Fication ° a aie caini guments,
+
+Tokenizer, GPT2LMHeadModel
+import spacy
+
+import torch
+
+from sklearn.model selection import train_test_split
+
+from sklearn.feature extraction.text import CountVectorizer
+
+import re
+
+okenizers = AutoTokenizer.from pretrained (
+
+embedding model = AutoModel.from pretrained (
+
+def preprocess query(query):
+
+inputs = tokenizers(query, return tensors=
+
+outputs = embedding model (**inputs)
+
+return outputs.last_ hidden state
+
+data = pd.read_excel (
+
+pd. DataFrame (data)
+
+_train intent = df[
+
+_train = df[
+
+_train_embeddings =
+[preprocess query(query) .mean(dim=1).detach().numpy() [0] for query in
+
+_train]
+
+Hnntent model = SVC(probability=True)
+
+Hntent model.fit(X train embeddings, y train intent)
+
+def recognize intent (query, model):
+
+embedding =
+
+preprocess query(query) .mean(dim=1).detach() .numpy() [0]
+
+intent proba = model.predict_proba( [embedding] )
+
+best_intent_idx = intent _proba.argmax ()
+
+best_intent_confidence = intent _proba[0] [best_intent_idx]
+
+intent = model.classes_[best_intent_idx]
+
+return intent, best _intent confidence
+
+hoc Hardware = [
+
+Asset_ID =[
+
+_train_ tokens = []
+
+_train_tokens.extend(Eq ID)
+
+_train_tokens.extend(Eq Name)
+
+_train_tokens.extend(Loc_ Hardware)
+
+_train_tokens.extend(S_No)
+
+_train_tokens.extend(SR_No)
+
+_train_tokens.extend(Asset_ID)
+
+_train_tokens.extend (General)
+
+_ train tokens = [ ] * Llen(Eq_ ID) + [
+] * len(Eq Name) + [
+hen(Loc Hardware) + [ ] * len(S_No) + [
+] * len(Asset_ID) + [
+
+len (General)
+
+_train_token_embeddings =
+
+[preprocess query(token) .mean(dim=1).detach().numpy()[0] for token in
+
+_train_tokens]
+
+oken_ classifier = RandomForestClassifier()
+
+oken _classifier.fit(x_ train token embeddings, y train tokens)
+
+class CustomTokenizer:
+
+def init (self, multi_word_ tokens):
+
+self.multi_word_ tokens = sorted(multi_word tokens, key=len,
+
+ireverse=True)
+
+self.token pattern = re.compile(r ++
+
+-join(re.escape(token) for token in self.multi_ word tokens) +
+
+)
+
+def tokenize(self, text):
+
+tokens = []
+
+last_index =
+
+for match in self.token_pattern.finditer(text):
+
+start, end = match.span()
+
+if start > last_index:
+
+non_ matching text = text[last_index:start].split()
+
+tokens.extend(non_ matching text)
+
+tokens.append(match.group())
+
+last_index = end
+
+if last_index < len(text):
+
+tokens.extend(text[last_index:].split())
+
+return tokens
+
+data0l = pd.read_excel (
+
+df01 = pd.DataFrame(data0l1)
+
+multi word tokens = df0l.iloc[:, 0].tolist()
+
+print (multi word tokens)
+
+okenizer = CustomTokenizer (multi word tokens)
+
+bert tokenizer = AutoTokenizer.from_pretrained(
+
+embedding model = AutoModel.from pretrained (
+
+def preprocessing query(query) :
+
+inputs = bert_tokenizer(query, return _tensors=
+
+outputs = embedding model (**inputs)
+
+return outputs.last_ hidden state
+
+def classify tokens(query) :
+
+tokens = tokenizer.tokenize (query)
+
+token embeddings = []
+
+for token in tokens:
+
+embedding =
+
+preprocessing query(token) .mean(dim=1).detach() .numpy() [0]
+
+token embeddings. append (embedding)
+
+token embeddings = np.array(token embeddings)
+
+if len(token_embeddings.shape) == 1:
+
+token embeddings = token_embeddings.reshape(1, -1)
+
+classifications = token classifier.predict (token embeddings)
+
+list (zip(tokens, classifications) )
+
+classified_tokens = classify tokens (query)
+
+google.colab userdata
+
+pathlib
+
+textwrap
+
+google.generativeai genai
+
+# Used to securely store your API key
+
+google.colab userdata
+
+IPython. display display
+
+IPython. display Markdown
+
+def to _markdown (text):
+
+text = text.replace('e',
+
+return Markdown (textwrap.indent (text,
+
+rue) )
+
+OOGLE API KEY=userdata.get (
+
+genai.configure(api_key=GOOGLE API_KEY)
+
+modelY = genai.GenerativeModel (
+
+def mapping (token word):
+
+mappings = [
+
+ambiguous word token_word
+
+mapping prompt
+
+{mappings }
+
+>
+
+r
+
+predicate=lambda _
+
+"{ambiguous_word}"
+
+response = modelY.generate content (mapping prompt, stream=True)
+
+complete response =
+
+for chunk in response:
+
+complete response += chunk.text
+
+print (complete response)
+
+if(complete response ==
+
+return ambiguous word
+
+return complete response
+
+Ire query =
+
+abel token = {}
+
+for token, label in classified_tokens:
+
+if (label !=
+
+new token = mapping (token)
+
+label token.update({label:new _token})
+
+re query re query + + new token
+
+else:
+
+re query re query + + token
+
+jorint (re query)
+
+hntent, confidence = recognize intent(re query, intent _model)
+
+fintent }
+
+fconfidence: .2f}")
+
+Hf (intent
+
+genai.GenerativeModel (
+
+query generator prompt = f
+
+{re query}
+
+{table}
+
+{label _ token}
+
+response = modelX.generate content (query generator prompt,
+
+ist ream=T rue)
+
+complete response =
+
+iffor chunk in response:
+
+complete response += chunk.text
+
+print (complete response)
